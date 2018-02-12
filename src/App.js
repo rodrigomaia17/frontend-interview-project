@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
+import moment from 'moment';
 import styled from 'styled-components';
 import logo from './logo.png';
 import './App.css';
@@ -50,27 +51,53 @@ width: 370px;
 const RoundedDiv = styled.div`
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
+  height: 100%;
+  overflow: hidden;
 `
 
-const AppointmentsWindow = () => (
+const DivLeftAligned = styled.div`
+  text-align: left
+`
+
+
+const availabilities = [
+  { startDate: moment().toISOString(), endDate: moment().toISOString() },
+  { startDate: moment().toISOString(), endDate: moment().toISOString() },
+  { startDate: moment().toISOString(), endDate: moment().toISOString() },
+];
+
+const availableItens = availabilities.map((a) => (<li> From: {a.startDate} </li>));
+
+const AppointmentsWindow = ({onClose}) => (
   <Window>
     <RoundedDiv className="card" >
       <header className="card-header">
         <p className="card-header-title">
-          Appointment day:
+          Appointments
         </p> 
-        <a href="#" className="card-header-icon" aria-label="more options">
+        <a href="#" onClick={onClose} className="card-header-icon" aria-label="more options">
           <span className="icon">
             <i className="fas fa-times" aria-hidden="true"></i>
           </span>
         </a>
       </header>
-      <div className="card-content">
-        <DayPickerInput />
-      </div>
+      <DivLeftAligned className="card-content">
+        <div className="field">
+          <label className="label">Select the best day for you:</label>
+          <div className="control">
+            <DayPickerInput />
+          </div>
+        </div>
+
+        <b> Availability Slots:</b>
+        <ul className="menu-list">
+          {availableItens}
+        </ul>
+
+      </DivLeftAligned>
+
     </RoundedDiv>
   </Window>
-
 )
 
 class AppointmentsLauncher extends Component {
@@ -82,7 +109,7 @@ class AppointmentsLauncher extends Component {
   };
 
   render() {
-    return !this.state.isOpen ? <Launcher onClick={() => { this.setState({isOpen: true}); }} /> : <AppointmentsWindow />;
+    return !this.state.isOpen ? <Launcher onClick={() => { this.setState({isOpen: true}); }} /> : <AppointmentsWindow onClose={() => {this.setState({ isOpen: false })}} />;
   }
 }
 

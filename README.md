@@ -2426,8 +2426,36 @@ In the future, we might start automatically compiling incompatible third-party m
 
 ## Alternatives to Ejecting
 
-[Ejecting](#npm-run-eject) lets you customize anything, but from that point on you have to maintain the configuration and scripts yourself. This can be daunting if you have many similar projects. In such cases instead of ejecting we recommend to *fork* `react-scripts` and any other packages you need. [This article](https://auth0.com/blog/how-to-configure-create-react-app/) dives into how to do it in depth. You can find more discussion in [this issue](https://github.com/facebookincubator/create-react-app/issues/682).
+[Ejecting](#npm-run-eject) lets you customize anything, but from that point on you have to maintain the configuration and scripts yourself. This can be daunting if you have many similar projects. In such cases instead of ejecting we recommend to *fork* `react-scripts`} and any other packages you need. [This article](https://auth0.com/blog/how-to-configure-create-react-app/) dives into how to do it in depth. You can find more discussion in [this issue](https://github.com/facebookincubator/create-react-app/issues/682).
 
 ## Something Missing?
 
 If you have ideas for more “How To” recipes that should be on this page, [let us know](https://github.com/facebookincubator/create-react-app/issues) or [contribute some!](https://github.com/facebookincubator/create-react-app/edit/master/packages/react-scripts/template/README.md)
+
+
+# About the project
+
+For this project, I tried to create a good solution that was easy to scale and maintain. I tried to explain some of my decisions below:
+
+
+## About the components
+
+Basically, I was responsible for just one big chain of components, the one that I called AvailabitiesWindow(*) . It has a simple state, and it is the only component that may benefit for some more complex state management in the future. All the others components are basic and stateless presentational components. 
+
+## About the styling
+
+I've used Styled-Components for most of the styling. I believe it is an easy solution for css in js, and becomes theming easier. I had to rush a little bit at the end, and I would like to spend more time tweaking the availability list appearance. It is important to mention that the popup window is following the ux requirement in desktop and mobile screens.
+
+## About testing
+
+I've used TDD principles to write the getAvailabilities implementation. It was easier to face the problem from the baby-steps perspective. There is a lot of room for improvement in this function, but I needed to move on to other parts. Although I feel safe to refactor it with the basic scenarios that I covered in my tests (and of course, adding more tests).
+
+I've also used some snapshot tests for my presentational components and its some of its variations. I believe it is a faster way to test your component if it does not have much complexity on it.
+
+## About Theming
+
+Theming is based on the ThemeProvider from styled-components. You can write your own themes, and use it from your styled components. To demonstrate its behavior, I've created a simple theme switcher that switches colors from a checkbox. I do not believe it is how this would be used in production but it is nice to demonstrate its behavior. Please check ThemeSwitcher.jsx
+
+## About my overall self-assessment:
+
+This exercise gives the opportunity to show different skills from the front-end perspective. I believe I showed some of my strengths including code structure, framework fluency and testing experience, for example. Of course, I would like to improve certain areas  of my project (mainly the availability list design ) if I had more time. Thank you

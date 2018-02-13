@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import moment from 'moment';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import { DateTime } from 'luxon';
 import logo from './logo.png';
 import { fetchOfficeHours, fetchAppointments } from './fetch/index.js';
@@ -13,7 +13,7 @@ import './App.css';
 const Launcher = styled.div`
   width: 60px;
   height: 60px;
-  background-color: #4e8cff;
+  background-color:  ${props => props.theme.launcherColor};
   background-position: center;
   background-repeat: no-repeat;
   position: fixed;
@@ -63,6 +63,10 @@ const DivLeftAligned = styled.div`
 `
 
 
+const ColorHeader = styled.header`
+  background-color:  ${props => props.theme.headerColor};
+`
+
 const availabilities = [
   { startDate: moment().toISOString(), endDate: moment().toISOString() },
   { startDate: moment().toISOString(), endDate: moment().toISOString() },
@@ -105,7 +109,7 @@ class AppointmentsWindow extends Component {
 
     return <Window>
       <RoundedDiv className="card" >
-        <header className="card-header">
+        <ColorHeader className="card-header">
           <p className="card-header-title">
             Appointments
           </p> 
@@ -114,7 +118,7 @@ class AppointmentsWindow extends Component {
               <i className="fas fa-times" aria-hidden="true"></i>
             </span>
           </a>
-        </header>
+        </ColorHeader>
         <DivLeftAligned className="card-content">
           <div className="field">
             <label className="label">Select the desired day:</label>
@@ -170,6 +174,16 @@ class AppointmentsLauncher extends Component {
   }
 }
 
+const blueTheme = {
+  launcherColor: '#4e8cff',
+  headerColor: 'lightblue'
+}
+
+const greenTheme = {
+  launcherColor: 'lightgreen',
+  headerColor: 'lightgreen'
+}
+
 class App extends Component {
   render() {
     return (
@@ -181,10 +195,42 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and any of its imported files and save to reload.
         </p>
-        <AppointmentsLauncher />
+        <ThemeSwitcher>
+          <AppointmentsLauncher />
+        </ThemeSwitcher>
       </div>
     );
   }
 }
+
+class ThemeSwitcher extends Component {
+
+  constructor(){
+   super(); 
+   this.state = { useNewTheme: false }
+   this.toggleTheme = this.toggleTheme.bind(this);
+  }
+
+  toggleTheme(){
+    this.setState({useNewTheme: !this.state.useNewTheme})
+  }
+
+  render() {
+    return  <ThemeProvider theme={ this.state.useNewTheme ? greenTheme : blueTheme}>
+      <div>
+        {this.props.children}
+        <PositionedLabel className="checkbox">
+          <input type="checkbox" checked={this.state.useNewTheme} onChange={this.toggleTheme} />
+            Use Alternative Theme
+        </PositionedLabel>
+      </div>
+    </ThemeProvider>
+  }
+}
+
+const PositionedLabel = styled.label`
+  position: absolute;
+  bottom: 10px
+`
 
 export default App;

@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<styled.div>
+  <styled.div
+    className="card"
+  >
+    <Component />
+    <styled.div
+      className="card-content"
+    >
+      <Component
+        handleDayChange={[Function]}
+      />
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`renders correctly with date 1`] = `
+<styled.div>
+  <styled.div
+    className="card"
+  >
+    <Component />
+    <styled.div
+      className="card-content"
+    >
+      <Component
+        handleDayChange={[Function]}
+        selectedDay={2018-02-02T00:00:00.000Z}
+      />
+      <Component
+        slots={Array []}
+      />
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;
+
+exports[`renders correctly with date and spinner 1`] = `
+<styled.div>
+  <styled.div
+    className="card"
+  >
+    <Component />
+    <styled.div
+      className="card-content"
+    >
+      <Component
+        handleDayChange={[Function]}
+        selectedDay={2018-02-02T00:00:00.000Z}
+      />
+      <Component />
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;

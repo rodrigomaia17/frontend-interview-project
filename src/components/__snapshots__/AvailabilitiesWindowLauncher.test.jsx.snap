@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly closed 1`] = `
+<styled.div
+  onClick={[Function]}
+/>
+`;
+
+exports[`renders correctly closed 2`] = `
+<AvailabilitiesWindow
+  onClose={[Function]}
+/>
+`;

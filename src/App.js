@@ -1,188 +1,12 @@
 
 import React, { Component } from 'react';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import 'react-day-picker/lib/style.css';
-import moment from 'moment';
-import styled, { ThemeProvider } from 'styled-components';
-import { DateTime } from 'luxon';
 import logo from './logo.png';
-import { fetchOfficeHours, fetchAppointments } from './fetch/index.js';
-import getAvailabilities from './availabilities/getAvailabilities.js';
+import AvailabilitiesLauncher from './components/AvailabilitiesWindowLauncher.jsx';
+import ThemeSwitcher from './components/ThemeSwitcher.jsx';
 import './App.css';
 
-const Launcher = styled.div`
-  width: 60px;
-  height: 60px;
-  background-color:  ${props => props.theme.launcherColor};
-  background-position: center;
-  background-repeat: no-repeat;
-  position: fixed;
-  right: 25px;
-  bottom: 25px;
-  border-radius: 50%;
-  box-shadow: none;
-  transition: box-shadow 0.2s ease-in-out;
-`;
-
-const Window = styled.div`
-  width: 370px;
-  height: calc(100% - 120px);
-  max-height: 590px;
-  position: fixed;
-  right: 25px;
-  bottom: 100px;
-  box-sizing: border-box;
-  box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.3);
-  background: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: 0.3s ease-in-out;
-  border-radius: 10px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-
-  @media (max-width: 450px) {
-  width: 100%;
-  height: 100%;
-  max-height: 100%;
-  right: 0px;
-  bottom: 0px;
-  border-radius: 0px;
-  }
-`;
-
-const RoundedDiv = styled.div`
-  border-top-left-radius: 9px;
-  border-top-right-radius: 9px;
-  height: 100%;
-  overflow: hidden;
-`
-
-const DivLeftAligned = styled.div`
-  text-align: left
-`
 
 
-const ColorHeader = styled.header`
-  background-color:  ${props => props.theme.headerColor};
-`
-
-const availabilities = [
-  { startDate: moment().toISOString(), endDate: moment().toISOString() },
-  { startDate: moment().toISOString(), endDate: moment().toISOString() },
-  { startDate: moment().toISOString(), endDate: moment().toISOString() },
-];
-
-
-class AppointmentsWindow extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedDay: undefined,
-      isLoading: false,
-      slots: []
-    };
-    this.handleDayChange = this.handleDayChange.bind(this);
-  }
-
-  fetchAvailabilities(selectedDay) {
-    Promise.all([fetchOfficeHours(selectedDay), fetchAppointments(selectedDay)])
-           .then((returnValues) => {
-             const officeHours = returnValues[0];
-             const appointments = returnValues[1];
-             const availableIntervals = getAvailabilities(officeHours,appointments);
-             this.setState({slots: availableIntervals, isLoading: false})
-           });
-  }
-
-  handleDayChange(selectedDay) {
-    this.setState({selectedDay, isLoading: true}, () => {
-      this.fetchAvailabilities(selectedDay)
-    });
-  }
-
-  render() {
-    const availableItens = this.state.slots.map((a) => (
-      <li> From {a.start.toLocaleString(DateTime.TIME_SIMPLE)} to {a.end.toLocaleString(DateTime.TIME_SIMPLE)}</li>
-    ));
-
-    return <Window>
-      <RoundedDiv className="card" >
-        <ColorHeader className="card-header">
-          <p className="card-header-title">
-            Appointments
-          </p> 
-          <a href="#" onClick={this.props.onClose} className="card-header-icon" aria-label="more options">
-            <span className="icon">
-              <i className="fas fa-times" aria-hidden="true"></i>
-            </span>
-          </a>
-        </ColorHeader>
-        <DivLeftAligned className="card-content">
-          <div className="field">
-            <label className="label">Select the desired day:</label>
-            <div className="control">
-              <DayPickerInput
-                value={this.state.selectedDay}
-                onDayChange={this.handleDayChange}
-              />
-            </div>
-          </div>
-
-          { this.state.selectedDay &&
-            (!this.state.isLoading ?
-             <div>
-               <b> Availability Slots:</b>
-               <ul className="menu-list">
-                 {availableItens}
-               </ul>
-             </div>
-            :
-             <LoadingSpinner />)
-          
-          }
-        </DivLeftAligned>
-
-      </RoundedDiv>
-    </Window>
-  }
-} 
-
-const SizedDiv = styled.div`
-  height: 350px;
-  text-align: center
-`
-
-const CenterIcon = styled.div`
-  position: relative;
-  top: 50%;
-`
-
-const LoadingSpinner = () => <SizedDiv><CenterIcon> <i className="fa fa-spinner fa-spin fa-4x" > </i></CenterIcon></SizedDiv> ;
-
-class AppointmentsLauncher extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isOpen: false
-    };
-  };
-
-  render() {
-    return !this.state.isOpen ? <Launcher onClick={() => { this.setState({isOpen: true}); }} /> : <AppointmentsWindow onClose={() => {this.setState({ isOpen: false })}} />;
-  }
-}
-
-const blueTheme = {
-  launcherColor: '#4e8cff',
-  headerColor: 'lightblue'
-}
-
-const greenTheme = {
-  launcherColor: 'lightgreen',
-  headerColor: 'lightgreen'
-}
 
 class App extends Component {
   render() {
@@ -196,41 +20,12 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and any of its imported files and save to reload.
         </p>
         <ThemeSwitcher>
-          <AppointmentsLauncher />
+          <AvailabilitiesLauncher />
         </ThemeSwitcher>
       </div>
     );
   }
 }
 
-class ThemeSwitcher extends Component {
-
-  constructor(){
-   super(); 
-   this.state = { useNewTheme: false }
-   this.toggleTheme = this.toggleTheme.bind(this);
-  }
-
-  toggleTheme(){
-    this.setState({useNewTheme: !this.state.useNewTheme})
-  }
-
-  render() {
-    return  <ThemeProvider theme={ this.state.useNewTheme ? greenTheme : blueTheme}>
-      <div>
-        {this.props.children}
-        <PositionedLabel className="checkbox">
-          <input type="checkbox" checked={this.state.useNewTheme} onChange={this.toggleTheme} />
-            Use Alternative Theme
-        </PositionedLabel>
-      </div>
-    </ThemeProvider>
-  }
-}
-
-const PositionedLabel = styled.label`
-  position: absolute;
-  bottom: 10px
-`
 
 export default App;
